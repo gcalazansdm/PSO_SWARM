@@ -1,11 +1,23 @@
+import numpy as np
+
+from Comunication_enum import Comunication as comunicationType
 from Function_enum import functions
 from inertia_enum import Inertia
-from Comunication_enum import Comunication as comunicationType
+
+def compare(a,b):
+    rValue = a < b
+    if(a is None):
+        rValue = True
+    if(b is None):
+        rValue = False
+    return rValue
 
 class Constants():
     def __init__(self):
-        self.dimensions = 30
-        self.particles = 30
+        self.initValue = -np.inf
+
+        self.dimensions = 2
+        self.particles = 3
         self.__functionTypes = [functions.Sphere,functions.Rastrigin]
         self.function = functions.Sphere
         self.__functionPos = 0
@@ -16,7 +28,7 @@ class Constants():
         self.inertiaType = Inertia.CONSTANT
         self.__inertiaPos = 0
 
-        self.inertia = 1.0
+        self.inertia = .8
 
         self.c1 = 2.05
         self.c2 = 2.05
@@ -25,9 +37,9 @@ class Constants():
         self.__r2 = 0.25
 
         self.maxSpeed = 3
-        self.maxInteractions = 200#10000
+        self.maxInteractions = 2000000
 
-        self.inertiaRange = (0,1)
+        self.inertiaRange = (0.4,0.9)
 
         self.localWeight = (self.c1,self.__r1)
         self.globalWeight = (self.c2,self.__r2)
@@ -49,4 +61,5 @@ class Constants():
         self.comunication = self.__comunicationTypes[self.__comunicationPos %len(self.__comunicationTypes)]
         self.__comunicationPos = self.__comunicationPos + 1
         return str(self.comunication)
+
 constants = Constants()

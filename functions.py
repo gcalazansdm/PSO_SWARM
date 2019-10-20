@@ -13,7 +13,8 @@ class Function():
             rValue = np.sum(np.power(x,2),axis=None) 
         else:
             a_1 = 10
-            rValue = np.sum( np.subtract(np.power(x,2) , (10*np.cos(2*np.pi*x) )) +a_1,axis=None)
+            rValue = a_1+np.sum( np.subtract(np.power(x,2) , (10*np.cos(2*np.pi*x) )),axis=None)
+            
         return rValue
 
 function = Function() 

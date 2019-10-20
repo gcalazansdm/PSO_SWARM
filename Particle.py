@@ -4,6 +4,7 @@ from numpy.random import randint as random
 from inertia_enum import Inertia
 from constants import constants
 from functions import function
+from constants import compare
 
 
 class Particle:
@@ -12,8 +13,8 @@ class Particle:
         self.__lowerBond = function.bondaries()[0]
         self.__hiBond = function.bondaries()[1]
         self.__position = random(low=self.__lowerBond, high=self.__hiBond, size=constants.dimensions)
-        self.__fitness = -np.inf
-        self.__bestFitness = -np.inf
+        self.__fitness = constants.initValue
+        self.__bestFitness = constants.initValue
         self.__boundaries = function.bondaries()
         self.__pBest = self.__position
         self.inertia = 0
@@ -40,10 +41,16 @@ class Particle:
 
     def updateFitness(self):
         self.__fitness = function.fitness(self.__position)
-        if(self.__fitness > self.__bestFitness):
+        
+        if(compare(self.__bestFitness,self.__fitness)):
             self.__bestFitness = self.__fitness
             self.__pBest = self.__position
+	
     def getBestFitness(self):
         return self.__bestFitness
+
+    def getFitness(self):
+        return self.__fitness
+
     def getbestPos(self):
         return self.__pBest

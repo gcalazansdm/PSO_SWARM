@@ -4,6 +4,7 @@ import math
 from Particle import Particle
 
 from constants import constants
+from constants import compare
 from numpy.random import randint as random
 from Comunication_enum import Comunication as comunicationType
 
@@ -14,22 +15,31 @@ class Population():
             self.particles.append(Particle())
         self.comunication = constants.comunication
     
-    def comparePositions(self,gBestFitness,BestPos,index):
+    def comparePositions(self,gBestFitness,BestPos,index,getBestFitness=True):
         rValue = (gBestFitness,BestPos)
-        gBest = self.particles[index].getBestFitness()
-        if(gBestFitness < gBest): 
+        if(getBestFitness):
+            gBest = self.particles[index].getBestFitness()
+        else:
+            gBest = self.particles[index].getFitness()                    
+        if(compare(gBestFitness,gBest)): 
             rValue = (gBest,self.particles[index].getbestPos())
         return rValue
 
     def getbestFitness(self):
-        gBest = -np.inf        
+        gBest = constants.initValue     
         for i in range(constants.dimensions):
             gBest,_ = self.comparePositions(gBest,None,i)
         return gBest
 
+    def getFitness(self):
+        gBest = constants.initValue     
+        for i in range(constants.dimensions):
+            gBest,_ = self.comparePositions(gBest,None,i,getBestFitness=False)
+        return gBest
+
     def updateVelocities(self):
         if self.comunication == comunicationType.GLOBAL:
-            gBestFitness = -np.inf    
+            gBestFitness = constants.initValue   
             pBest = None    
             for i in range(constants.dimensions):
                 gBestFitness,pBest = self.comparePositions(gBestFitness,pBest,i)
@@ -45,7 +55,7 @@ class Population():
                     left = max(i-j,0)
                     gBestFitness,pBest = self.comparePositions(gBestFitness,pBest,left)
                     
-                    right = max(i+j,constants.dimensions-1)
+                    right = min(i+j,constants.dimensions-1)
                     gBestFitness,pBest = self.comparePositions(gBestFitness,pBest,right)
 
                 self.particles[i].updateVelocity(pBest)

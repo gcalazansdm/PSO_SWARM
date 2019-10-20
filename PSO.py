@@ -40,14 +40,20 @@ class PSO():
            self.population = Population() #inicia particulas
            interaction = 0
            print(i,",",constants.numSimulations)
+           updateBar(interaction,constants.maxInteractions,None)
+           
            while interaction < constants.maxInteractions:
-                updateBar(interaction,constants.maxInteractions,None)
                 self.population.updateInertia(interaction)#atualiza inercia
+
                 self.population.updateFitness()#atualiza Fitness
-                gBestLists[i] += (self.population.getbestFitness())/constants.numSimulations#armazena melhor fitness
+
+                actualGbest = self.population.getbestFitness()
+                actualpbest = self.population.getFitness()
+                gBestLists[interaction] += (actualGbest)/constants.numSimulations#armazena melhor fitness
                 
                 self.population.updateVelocities()#atualiza velocidade
                 self.population.updatePositions()#atualiza poiscoes
+                updateBar(interaction,constants.maxInteractions,[actualGbest,actualpbest])
                 interaction += 1
            print()
        return gBestLists
