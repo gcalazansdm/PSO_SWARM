@@ -31,7 +31,7 @@ def updateBar(progress,toolbar_width,loss,start=0):
 class Swarm():
     def run(self,inertia,comunication,function):
        gBestLists = np.zeros(Utils.constants.maxInteractions)
-       actualpbestLists = np.zeros(Utils.constants.maxInteractions)
+       finalgbestLists = np.zeros(Utils.constants.numSimulations)
        for i in range(Utils.constants.numSimulations):
            population = Population(inertia,comunication,function) #inicia particulas
            interaction = 0
@@ -48,10 +48,10 @@ class Swarm():
                 actualGbest = population.getbestFitness()
                 actualpbest = population.getFitness()
                 gBestLists[interaction] = gBestLists[interaction] +(actualGbest)/Utils.constants.numSimulations#armazena melhor fitness
-                actualpbestLists[interaction] = actualpbestLists[interaction] +(actualpbest)/Utils.constants.numSimulations
                 population.updateVelocities()#atualiza velocidade
                 population.updatePositions()#atualiza poiscoes
                 updateBar(interaction,Utils.constants.maxInteractions,[actualGbest,actualpbest])
                 interaction += 1
            print()
-       return gBestLists,actualpbestLists
+           finalgbestLists[i] = gBestLists[interaction-1]
+       return gBestLists,finalgbestLists

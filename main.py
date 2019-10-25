@@ -3,31 +3,32 @@ import Utils
 import PSO
 import os
 
-directory = 'graphs'
+directory = 'graphs/function'
 if not os.path.exists(directory):
    os.makedirs(directory)
-directoryglobal = os.path.join(directory,'global')
-if not os.path.exists(directoryglobal):
-   os.makedirs(directoryglobal)
-directoryindividual = os.path.join(directory,'individual')
-if not os.path.exists(directoryindividual):
-   os.makedirs(directoryindividual)
+directoryboxplot = 'graphs/boxplot'
+if not os.path.exists(directoryboxplot):
+   os.makedirs(directoryboxplot)
 
 particleSwarmOpt = PSO.Swarm()
 for inertia in Utils.constants.inertiaTypes:
     for function in Utils.constants.functionTypes:
-        elems = []
-        ielems = []
+        listselems = []
+        subtitlesElems = []
+        finals = []
         for comunication in Utils.constants.comunicationTypes:
-            listelems,listindividualelems = particleSwarmOpt.run(inertia,comunication,function)
-            elems.append((listelems,comunication.name))
-            ielems.append((listindividualelems,comunication.name))
-   
-        for i in elems:
-            funcselems = i[0]
-            print(funcselems)
-            print(i[1])
-            plt.plot(funcselems, label=i[1])
+            listelems,finalgbestLists = particleSwarmOpt.run(inertia,comunication,function)
+            listselems.append(listelems)
+            subtitlesElems.append(comunication.name)
+            finals.append(finalgbestLists)
+        for i in range(len(listselems)):
+            funcselems = listselems[i]
+            plt.plot(funcselems, label=subtitlesElems[i])
         plt.legend()
         plt.savefig(os.path.join(directory,function.name+'_'+inertia.name+'.png'))
+        plt.clf()
+        fig1, ax1 = plt.subplots()
+        ax1.boxplot(finals)
+        ax1.set_xticklabels(subtitlesElems)
+        plt.savefig(os.path.join(directoryboxplot,function.name+'_'+inertia.name+'.png'))
         plt.clf()
